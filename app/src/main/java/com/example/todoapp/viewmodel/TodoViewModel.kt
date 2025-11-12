@@ -1,14 +1,27 @@
 package com.example.todoapp.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.todoapp.model.Todo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import com.example.todoapp.model.Todo
 
-class TodoViewModel : ViewModel() {
+// --- Fitur Baru (Anggota 5) ---
+enum class TodoFilter {
+    ALL,
+    ACTIVE,
+    COMPLETED
+}
+class TodoViewModel: ViewModel() {
     private val _todos = MutableStateFlow<List<Todo>>(emptyList())
     val todos: StateFlow<List<Todo>> = _todos
 
+    // --- Fitur Baru (Anggota 5) ---
+    private val _filter = MutableStateFlow(TodoFilter.ALL)
+    val filter: StateFlow<TodoFilter> = _filter
+
+    fun setFilter(newFilter: TodoFilter) {
+        _filter.value = newFilter
+    }
     fun addTask(title: String) {
         val nextId = (_todos.value.maxOfOrNull { it.id } ?: 0) + 1
         val newTask = Todo(id = nextId, title = title)
